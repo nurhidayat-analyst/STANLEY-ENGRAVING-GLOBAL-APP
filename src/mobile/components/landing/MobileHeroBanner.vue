@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import bannerBarbieImg from '@/assets/images/banner-barbie-hero.jpg'
-import bannerPeanutsImg from '@/assets/images/banner-peanuts-hero.jpg'
+import bannerLiunicImg from '@/assets/images/banner-liunic-hero.jpg'
+import bannerMaliqImg from '@/assets/images/banner-maliq-hero.jpg'
 
 const emit = defineEmits<{
   (e: 'navigate-customizer', productId?: string, campaignId?: string): void
@@ -22,23 +22,23 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 0,
-    badge: 'Limited Edition Collab',
-    title: 'Stanley1913 x Barbie™',
-    subtitle: 'Iconic Pink Collection. Available Now.',
-    ctaText: 'Engrave Barbie™',
-    image: bannerBarbieImg,
+    badge: 'Stanley x Liunic Collection',
+    title: 'Fuel your imagination',
+    subtitle: 'Keep the creativity flowing. The Stanley x Liunic Collection.',
+    ctaText: 'Explore Collection',
+    image: bannerLiunicImg,
     productId: 'quencher-h20-40oz',
-    campaignId: 'barbie',
+    campaignId: 'liunic',
   },
   {
     id: 1,
-    badge: 'Limited Edition Collab',
-    title: 'Stanley1913 x Peanuts™',
-    subtitle: 'Snoopy & Friends Edition. Available Now.',
-    ctaText: 'Engrave Peanuts™',
-    image: bannerPeanutsImg,
-    productId: 'iceflow-flip-straw',
-    campaignId: 'peanuts',
+    badge: "Stanley x MALIQ & D'ESSENTIALS",
+    title: 'Keep the rhythm flowing',
+    subtitle: "The MALIQ & D'ESSENTIALS Official Tour Artworks",
+    ctaText: 'Explore Collection',
+    image: bannerMaliqImg,
+    productId: 'quencher-h20-40oz',
+    campaignId: 'maliq',
   },
 ]
 
@@ -197,13 +197,14 @@ onUnmounted(() => {
         class="relative h-1.5 rounded-full transition-all duration-500 cursor-pointer focus:outline-none overflow-hidden"
         :class="[
           currentSlide === index
-            ? 'w-7 bg-white'
+            ? 'w-7 bg-white/30'
             : 'w-1.5 bg-white/40 hover:bg-white/70'
         ]"
       >
         <span
-          v-if="currentSlide === index && !isPaused"
-          class="absolute inset-0 bg-white rounded-full origin-left animate-progress-fill"
+          v-if="currentSlide === index"
+          class="absolute inset-0 bg-white rounded-full origin-left"
+          :class="{ 'animate-progress-fill': true, 'paused': isPaused }"
         ></span>
       </button>
     </div>
@@ -211,42 +212,48 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Razor-sharp HD image rendering & natural zoom without GPU texture loss */
+/* Razor-sharp HD image rendering & cinematic Ken Burns glide transition */
 .hero-slide-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: high-quality;
-  transform: scale(1);
-  transform-origin: center center;
-  transition: transform 7s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.hero-slide-img.is-active {
-  transform: scale(1.04);
+  image-rendering: auto;
+  backface-visibility: hidden;
+  transform: scale(1.08);
+  transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
 
-/* Headline & Subtitle Staggered GPU-Accelerated Animations from Desktop */
-.slide-up-enter-active,
+.hero-slide-img.is-active {
+  transform: scale(1);
+}
+
+/* Headline & Subtitle Staggered GPU-Accelerated Animations */
+.slide-up-enter-active {
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
 .slide-up-leave-active {
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translate3d(0, 0, 0);
+  transition: opacity 0.22s ease-in, transform 0.22s ease-in;
+  will-change: transform, opacity;
 }
 .slide-up-enter-from {
   opacity: 0;
-  transform: translate3d(0, 16px, 0);
+  transform: translate3d(0, 20px, 0);
 }
 .slide-up-leave-to {
   opacity: 0;
   transform: translate3d(0, -10px, 0);
 }
 
-.slide-up-delay-enter-active,
-.slide-up-delay-leave-active {
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+.slide-up-delay-enter-active {
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
   will-change: transform, opacity;
-  transform: translate3d(0, 0, 0);
+}
+.slide-up-delay-leave-active {
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+  will-change: transform, opacity;
 }
 .slide-up-delay-enter-from {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
+  transform: translate3d(0, 16px, 0);
 }
 .slide-up-delay-leave-to {
   opacity: 0;
@@ -259,6 +266,10 @@ onUnmounted(() => {
 }
 
 .animate-progress-fill {
-  animation: progressFill 3.5s linear forwards;
+  animation: progressFill 4s linear forwards;
+}
+
+.animate-progress-fill.paused {
+  animation-play-state: paused;
 }
 </style>
