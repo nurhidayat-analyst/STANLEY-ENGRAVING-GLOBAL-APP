@@ -25,7 +25,7 @@ const navItems = [
   { name: 'AEROLIGHT', href: '#' },
   { name: 'ACCESSORIES', href: '#' },
   { name: 'LIMITED EDITIONS', href: '#' },
-  { name: 'CUSTOMIZE', href: '#', active: true, hasChildren: true },
+  { name: 'Customize', href: '#', active: true, hasChildren: true },
 ]
 
 const customizeSubItems = [
@@ -166,12 +166,7 @@ const customizeSubItems = [
                     @click="isCustomizeExpanded = !isCustomizeExpanded"
                     class="flex items-center justify-between py-2 text-sm font-extrabold tracking-wide transition-all duration-200 text-black border-l-2 border-black pl-2 cursor-pointer group"
                   >
-                    <div class="flex items-center gap-1.5">
-                      <span>{{ item.name }}</span>
-                      <span class="px-1.5 py-0.5 text-[8.5px] bg-black text-white rounded-full font-bold uppercase tracking-wider">
-                        Studio
-                      </span>
-                    </div>
+                    <span>{{ item.name }}</span>
                     <ChevronRight
                       :size="16"
                       class="text-black transition-transform duration-200"

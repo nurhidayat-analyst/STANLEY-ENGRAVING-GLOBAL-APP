@@ -53,7 +53,7 @@ const handleCustomize = () => {
           }"
         >
           <img
-            :src="product.defaultImage"
+            :src="product.colors[selectedColorIndex]?.image || product.defaultImage"
             :alt="product.name"
             class="max-h-[360px] w-auto object-contain drop-shadow-xl transition-transform duration-300 hover:scale-105"
           />

@@ -103,6 +103,7 @@ const isLightColor = (hex?: string): boolean => {
 }
 
 const isProductColorLight = computed(() => {
+  if (selectedColor.value?.isLight !== undefined) return selectedColor.value.isLight
   return isLightColor(selectedColor.value?.hex)
 })
 
@@ -804,6 +805,7 @@ import {
   categoryDetails,
   artworkCategories,
   graphicCampaigns,
+  galleryHeroBanners,
   uniqueGraphics,
   getGraphicById,
   getGraphicImage
@@ -816,7 +818,7 @@ const startBannerAutoplay = () => {
   stopBannerAutoplay()
   bannerInterval = setInterval(() => {
     if (selectedSubCategory.value === 'gallery' && !activeCampaign.value) {
-      currentSlideIndex.value = (currentSlideIndex.value + 1) % graphicCampaigns.length
+      currentSlideIndex.value = (currentSlideIndex.value + 1) % galleryHeroBanners.length
     }
   }, 3000)
 }
@@ -1044,6 +1046,7 @@ const activeImage = computed(() => {
 
 const activeBlankImage = computed(() => {
   if (selectedColor.value?.blankImage) return selectedColor.value.blankImage
+  if (props.product.defaultBlankImage) return props.product.defaultBlankImage
   if (props.product.id === 'iceflow-flip-straw' || props.product.handle?.includes('iceflow')) {
     return blankIceflowImg
   }
@@ -1312,8 +1315,11 @@ watch(
             <!-- UNIFIED ENGRAVABLE AREA CANVAS BOX (Shared by Live Editing & Applied State) -->
             <div
               v-if="currentStep >= 2"
-              class="absolute z-20 w-[180px] sm:w-[200px] h-[264px] sm:h-[293px] rounded-[8px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] top-[48%] overflow-hidden no-scrollbar p-0"
+              class="absolute z-20 rounded-[8px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden no-scrollbar p-0"
               :style="{
+                width: `${productProfile.zoneWidth || 200}px`,
+                height: `${productProfile.zoneHeight || 290}px`,
+                top: productProfile.zoneTop || '48%',
                 transform: currentStep === 3
                   ? `translateY(-50%) scale(${step3EngravingScale})`
                   : 'translateY(-50%)',
@@ -2445,26 +2451,33 @@ watch(
 
               <!-- Graphic Campaign API Slider Hero Banner Container (Figma Node 5164:6464) -->
               <div
-                @click="activeCampaign = graphicCampaigns[currentSlideIndex]"
+                @click="activeCampaign = graphicCampaigns.find(c => c.id === galleryHeroBanners[currentSlideIndex].campaignId) || graphicCampaigns[0]"
                 class="bg-[#f5f5f5] rounded-[8px] overflow-hidden relative w-full h-[192px] p-[24px] flex flex-col justify-between text-white group shadow-xs cursor-pointer select-none"
               >
                 <transition name="fade" mode="out-in">
                   <img
-                    :key="graphicCampaigns[currentSlideIndex].id"
-                    :src="graphicCampaigns[currentSlideIndex].bannerImg"
-                    :alt="graphicCampaigns[currentSlideIndex].title"
+                    :key="galleryHeroBanners[currentSlideIndex].id"
+                    :src="galleryHeroBanners[currentSlideIndex].image"
+                    :alt="galleryHeroBanners[currentSlideIndex].title"
                     class="absolute inset-0 w-full h-full object-cover pointer-events-none brightness-90 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu"
                   />
                 </transition>
 
-                <div class="relative z-10 font-['Stanley_Favorit',sans-serif] font-bold text-[20px] text-white tracking-[-0.6px] leading-[24px]">
-                  <p class="mb-0">{{ graphicCampaigns[currentSlideIndex].title }}</p>
-                  <p>{{ graphicCampaigns[currentSlideIndex].subtitle }}</p>
+                <div class="relative z-10 font-['Stanley_Favorit',sans-serif] text-white">
+                  <p class="text-[11px] font-bold uppercase tracking-wider text-white/90 mb-1 leading-none">
+                    {{ galleryHeroBanners[currentSlideIndex].badge }}
+                  </p>
+                  <p class="mb-0 text-[20px] font-bold tracking-[-0.6px] leading-[24px]">
+                    {{ galleryHeroBanners[currentSlideIndex].title }}
+                  </p>
+                  <p class="text-[12px] font-normal text-white/90 mt-1 mb-0 leading-tight">
+                    {{ galleryHeroBanners[currentSlideIndex].subtitleClean }}
+                  </p>
                 </div>
                 <div class="relative z-10 flex items-end justify-between w-full">
                   <button
                     type="button"
-                    @click.stop="activeCampaign = graphicCampaigns[currentSlideIndex]"
+                    @click.stop="activeCampaign = graphicCampaigns.find(c => c.id === galleryHeroBanners[currentSlideIndex].campaignId) || graphicCampaigns[0]"
                     class="bg-[#f5f5f5] hover:bg-white text-black h-[40px] px-[16px] py-[8px] rounded-[8px] font-['Stanley_Favorit',sans-serif] font-bold text-[12px] flex items-center gap-[8px] transition-colors cursor-pointer shadow-xs"
                   >
                     <span>Explore Graphics</span>
@@ -2477,7 +2490,7 @@ watch(
                   <!-- Premium Slider Pagination Dots -->
                   <div class="flex items-center gap-[6px] opacity-90">
                     <span
-                      v-for="(camp, idx) in graphicCampaigns"
+                      v-for="(camp, idx) in galleryHeroBanners"
                       :key="camp.id"
                       @click.stop="currentSlideIndex = idx"
                       class="w-[8px] h-[8px] rounded-full transition-all duration-300 cursor-pointer"
@@ -2577,8 +2590,12 @@ watch(
                     @click="activeCategory = categoryDetails[cat.name] || null"
                     class="w-[138px] h-[184px] shrink-0 bg-[#f5f5f5] hover:bg-[#eaeaea] rounded-[8px] p-[16px] flex flex-col justify-between transition-all cursor-pointer select-none group"
                   >
-                    <div class="w-[80px] h-[80px] mx-auto flex items-center justify-center text-[44px] text-black">
-                      {{ cat.symbol }}
+                    <div class="w-[80px] h-[80px] mx-auto flex items-center justify-center">
+                      <img
+                        :src="cat.coverImg"
+                        :alt="cat.name"
+                        class="w-full h-full max-w-[56px] max-h-[56px] object-contain pointer-events-none transition-transform duration-200 group-hover:scale-105"
+                      />
                     </div>
                     <div class="flex items-center justify-between w-full">
                       <span class="font-['Stanley_Favorit',sans-serif] font-normal text-[12px] text-black leading-snug">

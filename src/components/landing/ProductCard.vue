@@ -80,15 +80,18 @@ const handleDesignNow = () => {
       />
     </div>
 
-    <!-- Color Swatches Bar (Static visual row - unclickable, no O-ring) -->
-    <div class="w-[200px] h-7 flex items-center justify-start gap-2 overflow-hidden py-1 px-1 select-none pointer-events-none flex-none">
-      <div
-        v-for="col in product.colors.slice(0, 7)"
+    <!-- Color Swatches Bar -->
+    <div class="w-[200px] h-7 flex items-center justify-start gap-2 overflow-hidden py-1 px-1 select-none flex-none">
+      <button
+        v-for="(col, idx) in product.colors.slice(0, 7)"
         :key="col.name"
         :title="col.name"
-        class="w-4 h-4 rounded-full flex-none"
+        @click.stop="selectColor(idx)"
+        class="w-4 h-4 rounded-full flex-none cursor-pointer transition-transform duration-150"
+        :class="selectedColorIndex === idx ? 'ring-2 ring-black ring-offset-1 scale-110' : 'hover:scale-110 opacity-90'"
         :style="{ backgroundColor: col.hex }"
-      ></div>
+        :aria-label="col.name"
+      ></button>
     </div>
 
     <!-- Product Details (Typography matching Figma: Bold 16px, Light 14px) -->
