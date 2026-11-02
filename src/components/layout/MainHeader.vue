@@ -40,7 +40,7 @@ const handleMouseLeaveCustomize = () => {
 }
 
 const handleNavClick = (linkName: string) => {
-  if (linkName === 'CUSTOMIZE') {
+  if (linkName === 'Customize' || linkName === 'CUSTOMIZE') {
     isMegaMenuOpen.value = false
     emit('navigate-customize')
   } else {
@@ -57,7 +57,7 @@ const navLinks = [
   { name: 'AEROLIGHT', href: '#' },
   { name: 'ACCESSORIES', href: '#' },
   { name: 'LIMITED EDITIONS', href: '#' },
-  { name: 'CUSTOMIZE', href: '#' },
+  { name: 'Customize', href: '#' },
 ]
 </script>
 
@@ -106,24 +106,21 @@ const navLinks = [
           v-for="link in navLinks"
           :key="link.name"
           class="h-full flex items-center relative"
-          @mouseenter="link.name === 'CUSTOMIZE' ? handleMouseEnterCustomize() : (isMegaMenuOpen = false)"
-          @mouseleave="link.name === 'CUSTOMIZE' ? handleMouseLeaveCustomize() : null"
+          @mouseenter="(link.name === 'Customize' || link.name === 'CUSTOMIZE') ? handleMouseEnterCustomize() : (isMegaMenuOpen = false)"
+          @mouseleave="(link.name === 'Customize' || link.name === 'CUSTOMIZE') ? handleMouseLeaveCustomize() : null"
         >
           <button
             @click="handleNavClick(link.name)"
             :class="[
               'cursor-pointer transition-all duration-150 py-1 relative flex items-center',
-              link.name === 'CUSTOMIZE' && (activeView === 'customize' || !activeView)
+              (link.name === 'Customize' || link.name === 'CUSTOMIZE') && (activeView === 'customize' || !activeView)
                 ? 'font-bold text-black border-b-2 border-black -mb-[2px]' 
-                : link.name === 'CUSTOMIZE'
+                : (link.name === 'Customize' || link.name === 'CUSTOMIZE')
                   ? 'hover:text-black text-neutral-700 font-semibold'
                   : 'hover:text-black text-neutral-600'
             ]"
           >
             {{ link.name }}
-            <span v-if="link.name === 'CUSTOMIZE'" class="ml-1 px-1.5 py-0.5 text-[9px] bg-black text-white rounded-full font-bold uppercase tracking-wider">
-              Studio
-            </span>
           </button>
         </div>
       </nav>

@@ -25,6 +25,14 @@ import familyMartLogoImg from '@/assets/images/licensed/familymart-logo.png'
 import bannerPssiStadiumImg from '@/assets/images/licensed/banner-pssi-stadium.png'
 import stanleyLogoImg from '@/assets/images/stanley-logo.png'
 
+// === Category Outline Minimalist Icons ===
+import categoryCelebrationIcon from '@/assets/icons/categories/celebration.svg'
+import categoryFamilyIcon from '@/assets/icons/categories/family.svg'
+import categoryHolidayIcon from '@/assets/icons/categories/holiday.svg'
+import categoryPetNatureIcon from '@/assets/icons/categories/pet-nature.svg'
+import categorySportsIcon from '@/assets/icons/categories/sports.svg'
+import categoryZodiacIcon from '@/assets/icons/categories/zodiac.svg'
+
 // === Celebration Official SVGs ===
 import anniversaryUrl from '@/assets/graphics/celebration/anniversary.svg'
 import anniversaryRaw from '@/assets/graphics/celebration/anniversary.svg?raw'
@@ -1559,54 +1567,101 @@ export const graphicCampaigns: GraphicCampaign[] = [
 ]
 
 // ==========================================
+// BROWSE GALLERY HERO BANNERS (Matching Desktop Hero Banner 100%)
+// ==========================================
+export interface GalleryHeroBanner {
+  id: string
+  badge: string
+  title: string
+  subtitle: string
+  subtitleClean: string
+  image: string
+  campaignId: string
+}
+
+export const galleryHeroBanners: GalleryHeroBanner[] = [
+  {
+    id: 'liunic',
+    badge: 'Stanley x Liunic Collection',
+    title: 'Fuel your imagination',
+    subtitle: 'Keep the creativity flowing.<br class="hidden sm:inline" /> The Stanley x Liunic Collection.',
+    subtitleClean: 'Keep the creativity flowing. The Stanley x Liunic Collection.',
+    image: bannerLiunicHeroImg,
+    campaignId: 'liunic',
+  },
+  {
+    id: 'maliq',
+    badge: "Stanley x MALIQ & D'ESSENTIALS",
+    title: 'Keep the rhythm flowing',
+    subtitle: "The MALIQ & D'ESSENTIALS Official Tour Artworks",
+    subtitleClean: "The MALIQ & D'ESSENTIALS Official Tour Artworks",
+    image: bannerMaliqHeroImg,
+    campaignId: 'maliq',
+  },
+]
+
+// ==========================================
 // CATEGORY DETAILS STRUCTURE
 // ==========================================
 export interface CategoryDetail {
   name: string
   symbol: string
+  coverImg: string
   graphics: GraphicItem[]
 }
 
 export const categoryDetails: Record<string, CategoryDetail> = {
   'Celebration': {
     name: 'Celebration',
-    symbol: '🎉',
+    symbol: 'Celebration',
+    coverImg: categoryCelebrationIcon,
     graphics: celebrationsGraphics,
   },
   'Family': {
     name: 'Family',
-    symbol: '👨‍👩‍👧‍👦',
+    symbol: 'Family',
+    coverImg: categoryFamilyIcon,
     graphics: familyGraphics,
   },
   'Holiday': {
     name: 'Holiday',
-    symbol: '🎄',
+    symbol: 'Holiday',
+    coverImg: categoryHolidayIcon,
     graphics: holidayGraphics,
   },
   'Pet & Nature': {
     name: 'Pet & Nature',
-    symbol: '🌿',
+    symbol: 'Pet & Nature',
+    coverImg: categoryPetNatureIcon,
     graphics: petNatureGraphics,
   },
   'Sports': {
     name: 'Sports',
-    symbol: '⚡',
+    symbol: 'Sports',
+    coverImg: categorySportsIcon,
     graphics: sportsGraphics,
   },
   'Zodiac': {
     name: 'Zodiac',
-    symbol: '☸️',
+    symbol: 'Zodiac',
+    coverImg: categoryZodiacIcon,
     graphics: zodiacGraphics,
   }
 }
 
-export const artworkCategories = [
-  { name: 'Celebration', symbol: '🎉' },
-  { name: 'Family', symbol: '👨‍👩‍👧‍👦' },
-  { name: 'Holiday', symbol: '🎄' },
-  { name: 'Pet & Nature', symbol: '🌿' },
-  { name: 'Sports', symbol: '⚡' },
-  { name: 'Zodiac', symbol: '☸️' },
+export interface ArtworkCategory {
+  name: string
+  coverImg: string
+  symbol?: string
+}
+
+export const artworkCategories: ArtworkCategory[] = [
+  { name: 'Celebration', coverImg: categoryCelebrationIcon },
+  { name: 'Family', coverImg: categoryFamilyIcon },
+  { name: 'Holiday', coverImg: categoryHolidayIcon },
+  { name: 'Pet & Nature', coverImg: categoryPetNatureIcon },
+  { name: 'Sports', coverImg: categorySportsIcon },
+  { name: 'Zodiac', coverImg: categoryZodiacIcon },
 ]
 
 // ==========================================

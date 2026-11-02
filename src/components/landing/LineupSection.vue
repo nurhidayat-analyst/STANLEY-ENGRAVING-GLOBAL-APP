@@ -64,7 +64,7 @@ const filteredProducts = computed(() => {
     return PRODUCTS.filter(p => p.id.includes('iceflow'))
   }
   if (activeCategory.value === 'MUGS') {
-    return PRODUCTS.filter(p => p.id.includes('mug'))
+    return PRODUCTS.filter(p => p.id.includes('mug') || p.id.includes('transit') || p.id.includes('pint') || p.id.includes('quick-flip'))
   }
   return PRODUCTS
 })

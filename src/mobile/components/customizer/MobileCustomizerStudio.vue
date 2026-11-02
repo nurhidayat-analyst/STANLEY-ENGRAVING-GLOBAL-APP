@@ -30,6 +30,7 @@ import {
   type GraphicItem,
   type GraphicCampaign,
   graphicCampaigns,
+  galleryHeroBanners,
   topGraphics as top5Graphics,
   celebrationsGraphics,
   familyGraphics,
@@ -165,6 +166,7 @@ const isLightColor = (hex?: string): boolean => {
 }
 
 const isProductColorLight = computed(() => {
+  if (selectedColor.value?.isLight !== undefined) return selectedColor.value.isLight
   return isLightColor(selectedColor.value?.hex)
 })
 
@@ -494,6 +496,7 @@ const availableSizes = computed(() => {
 
 const activeBlankImage = computed(() => {
   if (selectedColor.value?.blankImage) return selectedColor.value.blankImage
+  if (props.product.defaultBlankImage) return props.product.defaultBlankImage
   if (props.product.id === 'iceflow-flip-straw' || props.product.handle?.includes('iceflow')) {
     return blankIceflowImg
   }
@@ -939,7 +942,7 @@ const startSpecialBannerAutoplay = () => {
   stopSpecialBannerAutoplay()
   specialBannerInterval = setInterval(() => {
     if (showSpecialGraphicPopup.value) {
-      specialSlideIndex.value = (specialSlideIndex.value + 1) % graphicCampaigns.length
+      specialSlideIndex.value = (specialSlideIndex.value + 1) % galleryHeroBanners.length
     }
   }, 3500)
 }
@@ -974,10 +977,10 @@ const handlePopupTouchEnd = (e: TouchEvent) => {
   const diff = touchStartX.value - touchEndX
   if (diff > 35) {
     // Swipe left -> next slide
-    specialSlideIndex.value = (specialSlideIndex.value + 1) % graphicCampaigns.length
+    specialSlideIndex.value = (specialSlideIndex.value + 1) % galleryHeroBanners.length
   } else if (diff < -35) {
     // Swipe right -> previous slide
-    specialSlideIndex.value = (specialSlideIndex.value - 1 + graphicCampaigns.length) % graphicCampaigns.length
+    specialSlideIndex.value = (specialSlideIndex.value - 1 + galleryHeroBanners.length) % galleryHeroBanners.length
   }
 }
 
@@ -3026,9 +3029,9 @@ const handleNextStep = () => {
                   <!-- Background Image Carousel (Figma Node 5710:7528) -->
                   <Transition name="fade" mode="out-in">
                     <img
-                      :key="graphicCampaigns[specialSlideIndex].id"
-                      :src="graphicCampaigns[specialSlideIndex].bannerImg"
-                      :alt="graphicCampaigns[specialSlideIndex].title"
+                      :key="galleryHeroBanners[specialSlideIndex].id"
+                      :src="galleryHeroBanners[specialSlideIndex].image"
+                      :alt="galleryHeroBanners[specialSlideIndex].title"
                       class="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu"
                       data-node-id="5710:7528"
                     />
@@ -3056,9 +3059,16 @@ const handleNextStep = () => {
                     data-name="Hero Content Container"
                   >
                     <!-- Campaign Title & Subtitle (Figma Node 5710:7531) -->
-                    <div class="flex flex-col font-['Stanley_Favorit',sans-serif] font-bold text-[17.5px] leading-[21px] text-white tracking-[-0.5px] select-none" data-node-id="5710:7531">
-                      <p class="m-0">{{ graphicCampaigns[specialSlideIndex].title }}</p>
-                      <p class="m-0 text-white/95">{{ graphicCampaigns[specialSlideIndex].subtitle }}</p>
+                    <div class="flex flex-col font-['Stanley_Favorit',sans-serif] text-white select-none" data-node-id="5710:7531">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-white/90 mb-1 leading-none">
+                        {{ galleryHeroBanners[specialSlideIndex].badge }}
+                      </p>
+                      <p class="m-0 font-bold text-[17.5px] leading-[21px] tracking-[-0.5px]">
+                        {{ galleryHeroBanners[specialSlideIndex].title }}
+                      </p>
+                      <p class="m-0 text-[12px] font-normal text-white/90 mt-1 leading-tight">
+                        {{ galleryHeroBanners[specialSlideIndex].subtitleClean }}
+                      </p>
                     </div>
 
                     <!-- Button & Pagination Row (Figma Node 5710:7532) -->
@@ -3066,7 +3076,7 @@ const handleNextStep = () => {
                       <!-- Explore Graphics Button (Figma Node 5710:7533) -->
                       <button
                         type="button"
-                        @click="exploreCampaign(graphicCampaigns[specialSlideIndex].id)"
+                        @click="exploreCampaign(galleryHeroBanners[specialSlideIndex].campaignId)"
                         class="bg-[#f5f5f5] hover:bg-white text-black h-[35px] px-[14px] py-[8px] rounded-[8px] font-['Stanley_Favorit',sans-serif] font-bold text-[10.5px] flex items-center gap-[7px] transition-all cursor-pointer active:scale-95 shadow-sm shrink-0 select-none"
                         data-node-id="5710:7533"
                       >
@@ -3081,7 +3091,7 @@ const handleNextStep = () => {
                       <!-- Pagination Dots (Figma Node 5710:7534) -->
                       <div class="flex items-center gap-[6px]" data-node-id="5710:7534">
                         <button
-                          v-for="(camp, idx) in graphicCampaigns"
+                          v-for="(camp, idx) in galleryHeroBanners"
                           :key="camp.id"
                           type="button"
                           @click.stop="specialSlideIndex = idx"
